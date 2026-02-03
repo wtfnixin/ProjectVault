@@ -1,0 +1,175 @@
+.project-card-grid {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.project-card-grid .card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--spacing-4);
+  background: var(--bg-tertiary);
+  min-height: 80px;
+}
+
+.project-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: white;
+}
+
+.card-menu {
+  position: relative;
+}
+
+.menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.menu-trigger:hover {
+  background: white;
+  color: var(--text-primary);
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--spacing-1);
+  min-width: 120px;
+  background: white;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  z-index: var(--z-dropdown);
+  animation: slideUp var(--transition-fast) ease-out;
+}
+
+.menu-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.menu-dropdown button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.menu-dropdown button.danger {
+  color: var(--error);
+}
+
+.menu-dropdown button.danger:hover {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.project-card-grid .card-content {
+  padding: var(--spacing-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  margin-bottom: var(--spacing-1);
+  color: var(--text-primary);
+}
+
+.project-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.project-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.card-footer {
+  margin-top: auto;
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--border-primary);
+}
+
+.project-updated {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* List View */
+.project-card-list {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.card-list-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  flex: 1;
+}
+
+.project-card-list .project-info {
+  flex: 1;
+}
+
+.project-card-list .project-name {
+  font-size: var(--font-size-sm);
+  margin-bottom: 2px;
+}
+
+.project-card-list .project-description {
+  font-size: var(--font-size-xs);
+  margin: 0;
+  max-width: 360px;
+}
+
+.card-list-stats {
+  display: flex;
+  gap: var(--spacing-5);
+}
+
+.project-card-list .project-updated {
+  min-width: 80px;
+  text-align: right;
+}

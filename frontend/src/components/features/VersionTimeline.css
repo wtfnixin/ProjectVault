@@ -1,0 +1,120 @@
+.version-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-item {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.timeline-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.marker-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: white;
+  border: 2px solid var(--border-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  z-index: 1;
+}
+
+.timeline-item.current .marker-dot {
+  background: var(--primary-600);
+  border-color: var(--primary-600);
+  color: white;
+}
+
+.marker-line {
+  width: 2px;
+  flex: 1;
+  background: var(--border-primary);
+  margin: var(--spacing-2) 0;
+}
+
+.timeline-content {
+  flex: 1;
+  padding-bottom: var(--spacing-5);
+}
+
+.version-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+}
+
+.version-info h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-bottom: var(--spacing-1);
+}
+
+.current-badge {
+  padding: 2px 8px;
+  background: var(--success);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: white;
+}
+
+.version-meta {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.version-meta span {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.version-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-shrink: 0;
+}
+
+.version-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-1);
+}
+
+.version-date {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .version-header {
+    flex-direction: column;
+  }
+  
+  .version-actions {
+    width: 100%;
+  }
+  
+  .version-actions .btn {
+    flex: 1;
+  }
+}
