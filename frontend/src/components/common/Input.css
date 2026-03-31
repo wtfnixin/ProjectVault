@@ -18,7 +18,7 @@
 .input-wrapper {
   display: flex;
   align-items: center;
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   transition: all var(--transition-fast);

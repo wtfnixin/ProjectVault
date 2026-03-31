@@ -76,6 +76,17 @@ async def update_profile(
     
     if profile_data.name:
         current_user.name = profile_data.name
+        
+    if profile_data.bio is not None:
+        current_user.bio = profile_data.bio
+    if profile_data.company is not None:
+        current_user.company = profile_data.company
+    if profile_data.location is not None:
+        current_user.location = profile_data.location
+    if profile_data.twitter_username is not None:
+        current_user.twitter_username = profile_data.twitter_username
+    if profile_data.github_username is not None:
+        current_user.github_username = profile_data.github_username
     
     db.commit()
     db.refresh(current_user)

@@ -38,7 +38,7 @@
   flex: 1;
   max-width: 320px;
   padding: var(--spacing-2) var(--spacing-4);
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   transition: all var(--transition-fast);
@@ -70,7 +70,7 @@
 
 .view-toggle {
   display: flex;
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   overflow: hidden;

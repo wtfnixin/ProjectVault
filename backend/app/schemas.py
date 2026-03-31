@@ -7,6 +7,11 @@ from datetime import datetime
 class UserBase(BaseModel):
     email: EmailStr
     name: str
+    bio: Optional[str] = None
+    company: Optional[str] = None
+    location: Optional[str] = None
+    twitter_username: Optional[str] = None
+    github_username: Optional[str] = None
 
 class UserCreate(UserBase):
     password: str
@@ -30,6 +35,11 @@ class Token(BaseModel):
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
+    bio: Optional[str] = None
+    company: Optional[str] = None
+    location: Optional[str] = None
+    twitter_username: Optional[str] = None
+    github_username: Optional[str] = None
 
 class PasswordChange(BaseModel):
     current_password: str

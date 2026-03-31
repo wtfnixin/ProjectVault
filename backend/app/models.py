@@ -10,6 +10,11 @@ class User(Base):
     name = Column(String(100), nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
+    bio = Column(Text, nullable=True)
+    company = Column(String(100), nullable=True)
+    location = Column(String(100), nullable=True)
+    twitter_username = Column(String(50), nullable=True)
+    github_username = Column(String(50), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     projects = relationship("Project", back_populates="owner", cascade="all, delete-orphan")

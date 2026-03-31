@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Mail, Lock, Save, Camera } from 'lucide-react';
+import { User, Mail, Lock, Save, Camera, Building, MapPin, Github, Twitter, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
 import Button from '../components/common/Button';
@@ -16,7 +16,12 @@ export default function Settings() {
   
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
-    email: user?.email || ''
+    email: user?.email || '',
+    bio: user?.bio || '',
+    company: user?.company || '',
+    location: user?.location || '',
+    github_username: user?.github_username || '',
+    twitter_username: user?.twitter_username || ''
   });
   
   const [passwordData, setPasswordData] = useState({
@@ -146,6 +151,46 @@ export default function Settings() {
                     onChange={handleProfileChange}
                     icon={Mail}
                     required
+                  />
+                  <Input
+                    label="Bio"
+                    name="bio"
+                    value={profileData.bio}
+                    onChange={handleProfileChange}
+                    icon={BookOpen}
+                    placeholder="Tell us a little about yourself"
+                  />
+                  <Input
+                    label="Company / University"
+                    name="company"
+                    value={profileData.company}
+                    onChange={handleProfileChange}
+                    icon={Building}
+                    placeholder="Where do you work or study?"
+                  />
+                  <Input
+                    label="Location"
+                    name="location"
+                    value={profileData.location}
+                    onChange={handleProfileChange}
+                    icon={MapPin}
+                    placeholder="City, Country"
+                  />
+                  <Input
+                    label="GitHub Username"
+                    name="github_username"
+                    value={profileData.github_username}
+                    onChange={handleProfileChange}
+                    icon={Github}
+                    placeholder="johndoe"
+                  />
+                  <Input
+                    label="Twitter Username"
+                    name="twitter_username"
+                    value={profileData.twitter_username}
+                    onChange={handleProfileChange}
+                    icon={Twitter}
+                    placeholder="@johndoe"
                   />
                   <div className="form-actions">
                     <Button type="submit" variant="primary" loading={loading} icon={Save}>

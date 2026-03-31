@@ -183,7 +183,7 @@
 
 .project-mini-card:hover .project-mini-icon {
   color: var(--text-primary);
-  background: white;
+  background: var(--bg-primary);
   border-color: var(--border-primary);
 }
 

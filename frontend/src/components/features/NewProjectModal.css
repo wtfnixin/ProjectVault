@@ -30,7 +30,7 @@
 
 .form-textarea {
   padding: var(--spacing-3);
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   color: var(--text-primary);

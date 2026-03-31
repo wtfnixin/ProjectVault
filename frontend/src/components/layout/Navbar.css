@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   height: 60px;
-  background: white;
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border-primary);
   z-index: var(--z-sticky);
 }
@@ -29,7 +29,7 @@
 .navbar-logo {
   width: 28px;
   height: 28px;
-  background: white;
+  background: var(--bg-primary);
   border-radius: var(--radius-lg);
   padding: 2px;
 }
@@ -52,7 +52,7 @@
 }
 
 .navbar-search:focus-within {
-  background: white;
+  background: var(--bg-primary);
   border-color: var(--primary-500);
 }
 
@@ -160,7 +160,7 @@
   top: calc(100% + var(--spacing-2));
   right: 0;
   width: 240px;
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);

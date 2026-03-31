@@ -4,7 +4,7 @@
   left: 0;
   bottom: 0;
   width: 240px;
-  background: white;
+  background: var(--bg-primary);
   border-right: 1px solid var(--border-primary);
   z-index: var(--z-sticky);
 }

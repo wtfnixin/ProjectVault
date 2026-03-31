@@ -41,7 +41,7 @@
 }
 
 .menu-trigger:hover {
-  background: white;
+  background: var(--bg-primary);
   color: var(--text-primary);
 }
 
@@ -51,7 +51,7 @@
   right: 0;
   margin-top: var(--spacing-1);
   min-width: 120px;
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);

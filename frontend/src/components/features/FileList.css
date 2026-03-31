@@ -1,5 +1,5 @@
 .file-list-container {
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-xl);
   overflow: hidden;
@@ -90,7 +90,7 @@
   top: calc(100% + 4px);
   right: 0;
   width: 140px;
-  background: white;
+  background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);

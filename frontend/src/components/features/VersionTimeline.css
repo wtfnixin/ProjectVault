@@ -20,7 +20,7 @@
   width: 28px;
   height: 28px;
   border-radius: var(--radius-full);
-  background: white;
+  background: var(--bg-primary);
   border: 2px solid var(--border-primary);
   display: flex;
   align-items: center;

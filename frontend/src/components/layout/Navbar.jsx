@@ -9,6 +9,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { ThemeToggleButton } from '../common/DarkTheme';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -60,6 +61,7 @@ export default function Navbar() {
         </form>
 
         <div className="navbar-actions">
+          <ThemeToggleButton variant="circle" start="top-right" className="navbar-icon-btn" />
           <button className="navbar-icon-btn">
             <Bell size={20} />
             <span className="notification-badge">3</span>
