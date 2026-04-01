@@ -20,6 +20,9 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class GoogleLoginRequest(BaseModel):
+    id_token: str
+
 class UserResponse(UserBase):
     id: int
     created_at: datetime

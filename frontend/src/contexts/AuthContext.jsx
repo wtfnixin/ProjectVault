@@ -46,6 +46,15 @@ export function AuthProvider({ children }) {
     return userData;
   };
 
+  const googleLogin = async (idToken) => {
+    const response = await api.post('/auth/google-login', { id_token: idToken });
+    const { access_token, user: userData } = response.data;
+    localStorage.setItem('token', access_token);
+    setToken(access_token);
+    setUser(userData);
+    return userData;
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -59,6 +68,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!token && !!user,
     login,
     register,
+    googleLogin,
     logout,
   };
 

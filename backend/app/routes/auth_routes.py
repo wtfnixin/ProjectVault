@@ -110,3 +110,57 @@ async def change_password(
     db.commit()
     
     return {"message": "Password updated successfully"}
+
+import firebase_admin
+from firebase_admin import auth as firebase_auth
+import uuid
+
+@router.post("/google-login", response_model=schemas.Token)
+async def google_login(form_data: schemas.GoogleLoginRequest, db: Session = Depends(get_db)):
+    try:
+        # Verify Firebase ID token
+        decoded_token = firebase_auth.verify_id_token(form_data.id_token)
+        email = decoded_token.get("email")
+        name = decoded_token.get("name", email.split("@")[0] if email else "User")
+        
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No email found in token"
+            )
+            
+        # Check if user exists
+        user = db.query(models.User).filter(models.User.email == email).first()
+        
+        if not user:
+            # Create a new user with a strong randomized password
+            # since hashed_password is not nullable in our DB
+            random_password = str(uuid.uuid4()) + str(uuid.uuid4())
+            hashed_password = auth.get_password_hash(random_password)
+            
+            user = models.User(
+                name=name,
+                email=email,
+                hashed_password=hashed_password
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            
+        # Create access token for the session
+        access_token = auth.create_access_token(data={"sub": str(user.id)})
+        
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user": user
+        }
+    except Exception as e:
+        # Avoid overriding an HTTPException that we explicitly raised
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid Firebase authentication token: {str(e)}"
+        )
+

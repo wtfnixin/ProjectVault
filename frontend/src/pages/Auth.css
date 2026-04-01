@@ -177,3 +177,39 @@
     display: none;
   }
 }
+
+.auth-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--spacing-2) 0;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.auth-separator::before,
+.auth-separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.auth-separator span {
+  padding: 0 var(--spacing-3);
+}
+
+.google-btn {
+  margin-top: var(--spacing-2);
+}
+
+.google-btn span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.provider-icon {
+  width: 20px;
+  height: 20px;
+}

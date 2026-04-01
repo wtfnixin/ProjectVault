@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads"
     MAX_FILE_SIZE: int = 50 * 1024 * 1024  # 50MB
     
+    # Firebase
+    FIREBASE_CREDENTIALS_PATH: str | None = None
+    
     class Config:
         env_file = ".env"
 

@@ -21,6 +21,16 @@
   border-radius: var(--radius-sm);
 }
 
+.dark .skeleton {
+  background: var(--bg-tertiary);
+  background-image: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    var(--border-primary) 37%,
+    var(--bg-tertiary) 63%
+  );
+}
+
 .skeleton-text {
   height: 1em;
   margin-bottom: 0.5em;

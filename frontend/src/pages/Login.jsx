@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -8,7 +10,7 @@ import './Auth.css';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,6 +34,32 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    
+    if (!auth || !googleProvider) {
+      setError('Google Sign-In is not configured. Please check your environment variables.');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+      
+      await googleLogin(idToken);
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Google Sign-In Error:', err);
+      // Ignore user-cancelled login errors
+      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+        setError(err.response?.data?.detail || err.message || 'Google authentication failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -116,6 +144,23 @@ export default function Login() {
                 loading={loading}
               >
                 Sign In
+              </Button>
+
+              <div className="auth-separator">
+                <span>Or continue with</span>
+              </div>
+
+              <Button
+                type="button"
+                variant="secondary"
+                size="lg"
+                fullWidth
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                className="google-btn"
+              >
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="provider-icon" />
+                Sign in with Google
               </Button>
             </form>
 

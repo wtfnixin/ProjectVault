@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
 from .config import settings
 from .routes import auth_routes, project_routes, file_routes, version_routes, activity_routes
+from .firebase_setup import init_firebase
+
+# Initialize Firebase
+init_firebase()
 
 # Create database tables
 Base.metadata.create_all(bind=engine)

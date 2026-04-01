@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { FolderKanban, Search, LayoutGrid, List, Plus, Folder } from 'lucide-react';
 import api from '../services/api';
 import Button from '../components/common/Button';
@@ -13,7 +13,8 @@ import './Projects.css';
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [viewMode, setViewMode] = useState('grid');
   const [showNewModal, setShowNewModal] = useState(false);
 
@@ -31,6 +32,22 @@ export default function Projects() {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  // Sync state when URL params change (e.g., from Navbar search)
+  useEffect(() => {
+    const query = searchParams.get('search') || '';
+    setSearchQuery(query);
+  }, [searchParams]);
+
+  // Sync URL when local search query changes
+  const handleSearchChange = (value) => {
+    setSearchQuery(value);
+    if (value) {
+      setSearchParams({ search: value });
+    } else {
+      setSearchParams({});
+    }
+  };
 
   const handleCreateProject = async (projectData) => {
     try {
@@ -98,7 +115,7 @@ export default function Projects() {
             type="text"
             placeholder="Search projects..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
         
