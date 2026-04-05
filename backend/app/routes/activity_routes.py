@@ -51,6 +51,30 @@ async def get_stats(
         "storage_used": storage
     }
 
+@router.get("/heatmap")
+async def get_activity_heatmap(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    from datetime import datetime, timedelta
+    from sqlalchemy import func
+    
+    one_year_ago = datetime.utcnow() - timedelta(days=365)
+    
+    # SQLite compatible date grouping
+    results = db.query(
+        func.date(models.Activity.created_at).label('date'),
+        func.count(models.Activity.id).label('count')
+    ).filter(
+        models.Activity.user_id == current_user.id,
+        models.Activity.created_at >= one_year_ago
+    ).group_by(
+        func.date(models.Activity.created_at)
+    ).all()
+    
+    # Map to dictionary { "YYYY-MM-DD": count }
+    return {str(row.date): row.count for row in results}
+
 @router.delete("")
 async def clear_activity_history(
     db: Session = Depends(get_db),

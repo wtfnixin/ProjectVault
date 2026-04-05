@@ -16,6 +16,7 @@ import api from '../services/api';
 import Card from '../components/common/Card';
 import ProjectCardSkeleton from '../components/common/skeletons/ProjectCardSkeleton';
 import ActivitySkeleton from '../components/common/skeletons/ActivitySkeleton';
+import ActivityHeatmap from '../components/dashboard/ActivityHeatmap';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -23,19 +24,22 @@ export default function Dashboard() {
   const [stats, setStats] = useState({ total_projects: 0, total_files: 0, total_versions: 0, storage_used: 0 });
   const [activities, setActivities] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [heatmapData, setHeatmapData] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsRes, activitiesRes, projectsRes] = await Promise.all([
+        const [statsRes, activitiesRes, projectsRes, heatmapRes] = await Promise.all([
           api.get('/activity/stats'),
           api.get('/activity?limit=5'),
-          api.get('/projects')
+          api.get('/projects'),
+          api.get('/activity/heatmap')
         ]);
         setStats(statsRes.data);
         setActivities(activitiesRes.data);
         setProjects(projectsRes.data.slice(0, 4));
+        setHeatmapData(heatmapRes.data);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
       } finally {
@@ -176,6 +180,13 @@ export default function Dashboard() {
             </div>
           </div>
         </Card>
+      </div>
+
+      <div className="dashboard-section" style={{ marginBottom: 'var(--spacing-6)' }}>
+        <div className="section-header">
+          <h2>Activity Heatmap</h2>
+        </div>
+        <ActivityHeatmap data={heatmapData} />
       </div>
 
       <div className="dashboard-grid">

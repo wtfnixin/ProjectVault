@@ -23,6 +23,13 @@ class UserLogin(BaseModel):
 class GoogleLoginRequest(BaseModel):
     id_token: str
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
 class UserResponse(UserBase):
     id: int
     created_at: datetime

@@ -1,0 +1,86 @@
+PROJECT PITCH & TECHNICAL ARCHITECTURE REPORT: PROJECTVAULT
+Prepared for University Project Presentation
+
+================================================================================
+1. ABSTRACT / EXECUTIVE SUMMARY
+================================================================================
+ProjectVault is a modern, web-based version control and project-artifact management platform designed explicitly for non-developers. While software engineers utilize Git to track microscopic, line-by-line code changes, professionals in creative, academic, and administrative disciplines rely on large, monolithic binary files (e.g., PSD, MP4, DWG). ProjectVault abstracts the complexity of traditional version control into an intuitive, snapshot-based workflow. By allowing users to upload encapsulated "Project Versions" rather than casually saving over scattered files, the platform solves the widespread industry problem of project corruption, accidental overwrites, and the infamous "Final_v2_RealFinal" file naming syndrome.
+
+================================================================================
+2. PROBLEM STATEMENT & COMPETITIVE ANALYSIS
+================================================================================
+Modern digital workflows are highly iterative, demanding constant revisions, feedback loops, and drafting phases. However, existing tools fail to support non-developer iteration effectively:
+
+A. The Consumer Cloud (Google Drive, Dropbox, OneDrive)
+- Flaw: These are passive "Sync Engines." If a user accidentally deletes half a document and clicks save, the cloud instantly syncs that mistake, destroying the original work. While "Version History" exists, it is strictly per-file and hidden in context menus. A user cannot capture a moment-in-time snapshot of an entire project folder containing 50 related assets.
+
+B. The Developer Cloud (GitHub, GitLab)
+- Flaw: Git tracks "diffs" (differences in text). It is incredibly inefficient for large binary media files. Furthermore, it requires a steep learning curve, command-line interfaces, and complex concepts (merging, rebasing, branching) that are completely alien to graphic designers, architects, or researchers.
+
+C. The Organizational Cloud (Notion, Trello)
+- Flaw: These platforms are excellent for task management, knowledge bases, and text, but they lack true file-system architecture. They cannot serve as a reliable repository for managing 50GB of video assets and their chronological iterations.
+
+The Gap: There is no platform that combines the absolute certainty and structured milestone-snapshotting of developer version control (GitHub) with the user-friendly, drag-and-drop accessibility of consumer cloud storage (Dropbox).
+
+================================================================================
+3. PROPOSED SOLUTION: PROJECTVAULT 
+================================================================================
+ProjectVault bridges this gap by enforcing a deliberate, milestone-based file management strategy.
+- Immutability: When a user reaches a milestone (e.g., "Client Pitch Draft 1"), they upload the project assets to ProjectVault. This creates an immutable "Version." 
+- Rollback Capability: If the client later rejects "Draft 3," the user can navigate to the ProjectVault dashboard and download the "Draft 1" ZIP archive, perfectly preserving the exact state of the project at that moment in time.
+- Auditability: The platform automatically tracks user actions, logging who created a project, who uploaded a version, and when files were modified or deleted.
+
+================================================================================
+4. IN-DEPTH TECHNICAL ARCHITECTURE & TECH STACK
+================================================================================
+The platform utilizes a decoupled, modern Client-Server architecture to ensure modularity, scalability, and robust security.
+
+4.1 Frontend Architecture (Client Layer)
+- React.js: Driven by a component-based architecture for rich, reactive user interfaces. React allows the dashboard to dynamically update active files, versions, and activity logs without page reloads (SPA - Single Page Application paradigm).
+- Vite: Replaces traditional bundlers (like Webpack) to provide extremely fast Hot Module Replacement (HMR) during development and highly optimized, minified static assets for production deployment.
+- State Management & Hooks: React hooks manage complex UI states, such as tracking multi-file upload progress and transitioning between project views.
+
+4.2 Backend Core (Application Layer)
+- Python & FastAPI: FastAPI was selected over traditional frameworks like Django or Flask due to its native asynchronous (`async`/`await`) capabilities. Because file uploading is heavily I/O bound, standard synchronous frameworks block the server thread while waiting for bytes to write to the disk. FastAPI handles thousands of concurrent connections smoothly. It also automatically generates interactive Swagger/OpenAPI documentation.
+- Uvicorn: A lightning-fast ASGI (Asynchronous Server Gateway Interface) server that runs the FastAPI application.
+
+4.3 Data Modeling & ORM
+- SQLAlchemy: Serves as the Object-Relational Mapper bridging Python and the SQL database. It structures the data into optimized, relational tables:
+  * Users: Stores profile data and hashed credentials.
+  * Projects: Represents the high-level container, owned by a User.
+  * Versions: Represents chronological milestones linked to a Project.
+  * Files: Stores metadata regarding the individual physical files uploaded.
+  * VersionFiles (Join Table): A many-to-many relationship mapping specific files to specific versions, allowing efficient tracking of which files changed between updates.
+  * Activities: An immutable audit-log table tracking user actions.
+
+4.4 Storage Strategy (Decoupled Metadata vs Binary)
+- Database (SQLite/PostgreSQL): Strictly handles metadata.
+- Local File System (Disk I/O): The actual binary blobs (the files) are saved to the server's local storage utilizing a secure, randomized UUID structure (e.g., `uploads/project_id/550e8400-e29b-41d4-a716-446655440000.pdf`). This completely prevents database bloating and ensures memory-efficient streaming when users request downloads.
+
+================================================================================
+5. SECURITY PROTOCOLS & DEEP DIVE
+================================================================================
+Since ProjectVault houses sensitive client data, security was integrated deeply into the core architecture rather than as an afterthought.
+
+A. Authentication & Session Management (Stateless)
+- JSON Web Tokens (JWT): Instead of relying on vulnerable server-side session cookies, ProjectVault issues cryptographically signed JWTs upon login. The frontend passes this token via the `Authorization: Bearer` header on every request, ensuring stateless, scalable verification.
+- BCrypt Hashing: Passwords are automatically salted and hashed via BCrypt before ever touching the database, protecting user credentials even in the event of a total database breach.
+
+B. Rate Limiting mitigations (SlowAPI)
+- To protect against Brute Force and Credential Stuffing attacks, the backend utilizes `SlowAPI`. Critical endpoints (Login, Register, Password Reset) are strictly limited (e.g., 5 requests per minute per IP address). This throttles malicious automation immediately at the origin layer.
+
+C. Protection against Input & Path Traversal Data Hacks
+- Zip Slip / Path Traversal Prevention: When a user uploads a file, a malicious attacker might spoof the "filename" parameter to read something like `../../../../etc/passwd` to overwrite server logic. ProjectVault forcefully sanitizes all inputs using OS-level path truncation before saving the file or binding it into a compressed ZIP for download.
+
+D. Secure Account Recovery
+- ProjectVault utilizes a secure, randomized tokenized Magic Link system for password resets. Tokens are strictly bound to 15-minute expirations to prevent replay attacks, and the API purposefully obfuscates responses to prevent attackers from using the endpoint to "enumerate" or guess which emails belong to registered users.
+
+================================================================================
+6. FUTURE SCOPE & SCALABILITY
+================================================================================
+While currently running locally, the architecture is designed for immediate horizontal scaling:
+- Cloud Object Storage Integration: The Local storage mechanism can easily be swapped out for AWS S3 buckets or Azure Blob Storage simply by updating the file-save controller, allowing infinite terabyte-scale storage.
+- Real-Time Websockets: FastAPI natively supports WebSockets; future updates could broadcast real-time project updates to team members currently viewing the dashboard simultaneously.
+- Distributed Caching: Redis could be implemented to cache JWT validations and frequent project fetches, further reducing database load.
+
+ProjectVault isn't just cloud storage. It is enterprise-grade version control democratized for the rest of the world.

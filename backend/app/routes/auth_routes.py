@@ -1,13 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from .. import models, schemas, auth
 from ..database import get_db
+from ..limiter import limiter
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=schemas.Token)
-async def register(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+async def register(request: Request, user_data: schemas.UserCreate, db: Session = Depends(get_db)):
     # Check if email exists
     existing = db.query(models.User).filter(models.User.email == user_data.email).first()
     if existing:
@@ -37,7 +39,8 @@ async def register(user_data: schemas.UserCreate, db: Session = Depends(get_db))
     }
 
 @router.post("/login", response_model=schemas.Token)
-async def login(form_data: schemas.UserLogin, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+async def login(request: Request, form_data: schemas.UserLogin, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == form_data.email).first()
     
     if not user or not auth.verify_password(form_data.password, user.hashed_password):
@@ -116,7 +119,8 @@ from firebase_admin import auth as firebase_auth
 import uuid
 
 @router.post("/google-login", response_model=schemas.Token)
-async def google_login(form_data: schemas.GoogleLoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+async def google_login(request: Request, form_data: schemas.GoogleLoginRequest, db: Session = Depends(get_db)):
     try:
         # Verify Firebase ID token
         decoded_token = firebase_auth.verify_id_token(form_data.id_token)
@@ -163,4 +167,50 @@ async def google_login(form_data: schemas.GoogleLoginRequest, db: Session = Depe
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Invalid Firebase authentication token: {str(e)}"
         )
+
+@router.post("/forgot-password")
+@limiter.limit("3/minute")
+async def forgot_password(request: Request, req: schemas.ForgotPasswordRequest, db: Session = Depends(get_db)):
+    import uuid
+    from datetime import datetime, timedelta
+    
+    user = db.query(models.User).filter(models.User.email == req.email).first()
+    if not user:
+        # We don't want to expose which emails exist, just return success
+        return {"message": "If an account with that email exists, we have generated a reset link"}
+
+    # Generate a secure token and set expiration to 15 mins from now
+    token = str(uuid.uuid4())
+    user.reset_token = token
+    user.reset_token_expires = datetime.utcnow() + timedelta(minutes=15)
+    db.commit()
+    
+    # MAGIC EMAIL MOCK
+    # Normally we email this token. Since we don't have SMTP, we are returning it 
+    # to the frontend mock so it can display the UI link for Academic Demo purposes.
+    return {
+        "message": "If an account with that email exists, we have generated a reset link",
+        "mock_magic_link_token": token
+    }
+
+@router.post("/reset-password")
+@limiter.limit("3/minute")
+async def reset_password(request: Request, req: schemas.ResetPasswordRequest, db: Session = Depends(get_db)):
+    from datetime import datetime
+    
+    user = db.query(models.User).filter(models.User.reset_token == req.token).first()
+    
+    if not user or not user.reset_token_expires or user.reset_token_expires < datetime.utcnow():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token"
+        )
+    
+    # Reset security credentials
+    user.hashed_password = auth.get_password_hash(req.new_password)
+    user.reset_token = None
+    user.reset_token_expires = None
+    db.commit()
+    
+    return {"message": "Password has been successfully reset"}
 

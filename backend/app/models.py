@@ -15,6 +15,8 @@ class User(Base):
     location = Column(String(100), nullable=True)
     twitter_username = Column(String(50), nullable=True)
     github_username = Column(String(50), nullable=True)
+    reset_token = Column(String(255), unique=True, index=True, nullable=True)
+    reset_token_expires = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     projects = relationship("Project", back_populates="owner", cascade="all, delete-orphan")

@@ -59,7 +59,7 @@ async def upload_files(
 
     # Identify files to carry over (files from current version that are NOT in the new upload)
     files_to_carry_over = []
-    uploaded_filenames = {f.filename for f in files}
+    uploaded_filenames = {os.path.basename(f.filename.replace("\\", "/")) for f in files}
     
     if current_version:
         # Check if any uploaded file matches an existing file in the current version
@@ -131,14 +131,15 @@ async def upload_files(
     # But usually a version response includes file_count of the WHOLE version.
     
     for file in files:
+        safe_filename = os.path.basename(file.filename.replace("\\", "/"))
         # Generate unique filename details for activity log
-        if file.filename in all_existing_names:
-            modified_files.append(file.filename)
+        if safe_filename in all_existing_names:
+            modified_files.append(safe_filename)
         else:
-            added_files.append(file.filename)
-            all_existing_names.add(file.filename)
+            added_files.append(safe_filename)
+            all_existing_names.add(safe_filename)
             
-        ext = os.path.splitext(file.filename)[1]
+        ext = os.path.splitext(safe_filename)[1]
         unique_name = f"{uuid.uuid4()}{ext}"
         file_path = os.path.join(project_dir, unique_name)
         
@@ -150,7 +151,7 @@ async def upload_files(
         # Create file record
         file_record = models.File(
             name=unique_name,
-            original_name=file.filename,
+            original_name=safe_filename,
             path=file_path,
             size=len(content),
             mime_type=file.content_type,

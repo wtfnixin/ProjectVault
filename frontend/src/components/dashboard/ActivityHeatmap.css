@@ -1,0 +1,88 @@
+.activity-heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  background: var(--bg-primary);
+  width: 100%;
+}
+
+.heatmap-scroll-area {
+  display: flex;
+  gap: var(--spacing-2);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-2);
+}
+
+.heatmap-weekdays {
+  display: grid;
+  grid-template-rows: repeat(7, 13px);
+  gap: 3px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  align-items: center;
+  padding-right: var(--spacing-2);
+}
+
+.heatmap-weekdays span:nth-child(1) { grid-row: 2 / span 1; }
+.heatmap-weekdays span:nth-child(2) { grid-row: 4 / span 1; }
+.heatmap-weekdays span:nth-child(3) { grid-row: 6 / span 1; }
+
+.heatmap-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 13px);
+  grid-auto-flow: column;
+  grid-auto-columns: 13px;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 13px;
+  height: 13px;
+  border-radius: 2px;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+
+.heatmap-cell:hover:not(.empty-pad) {
+  transform: scale(1.2);
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.empty-pad {
+  background-color: transparent !important;
+  pointer-events: none;
+}
+
+/* Color levels natively using theme var tokens */
+.heatmap-cell.level-0 { background-color: var(--bg-tertiary); }
+.heatmap-cell.level-1 { background-color: var(--primary-300); }
+.heatmap-cell.level-2 { background-color: var(--primary-500); }
+.heatmap-cell.level-3 { background-color: var(--primary-700); }
+.heatmap-cell.level-4 { background-color: var(--primary-900); }
+
+/* Legend & Footer */
+.heatmap-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-2);
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.heatmap-legend .heatmap-cell {
+  cursor: default;
+  width: 11px;
+  height: 11px;
+}
+.heatmap-legend .heatmap-cell:hover {
+  transform: none;
+  box-shadow: none;
+}
