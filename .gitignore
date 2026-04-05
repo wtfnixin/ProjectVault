@@ -42,3 +42,9 @@ projectvault.db
 
 # Uploads
 backend/uploads/
+
+# Local-only documentation and brainstorms
+API_STRUCTURE.txt
+features_brainstorm.md
+task.md
+word.txt
