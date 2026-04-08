@@ -123,7 +123,7 @@ import uuid
 async def google_login(request: Request, form_data: schemas.GoogleLoginRequest, db: Session = Depends(get_db)):
     try:
         # Verify Firebase ID token
-        decoded_token = firebase_auth.verify_id_token(form_data.id_token)
+        decoded_token = firebase_auth.verify_id_token(form_data.id_token, clock_skew_seconds=60)
         email = decoded_token.get("email")
         name = decoded_token.get("name", email.split("@")[0] if email else "User")
         
