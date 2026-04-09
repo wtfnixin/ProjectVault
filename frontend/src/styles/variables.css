@@ -121,6 +121,7 @@
   /* Semantic primary color inversion for active states */
   --primary-50: #003b6f;
   --primary-100: #004786;
+  --primary-600: #36a3ff;
   --primary-700: #7cc4ff;
 
   /* Inverted Gray Scale for components utilizing raw grayscale values */
