@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Upload, Download, FileText, History, Folder } from 'lucide-react';
+import { ArrowLeft, Upload, Download, FileText, History, Folder, Book } from 'lucide-react';
 import api from '../services/api';
 import Button from '../components/common/Button';
 import FileUploader from '../components/features/FileUploader';
 import FileList from '../components/features/FileList';
 import VersionTimeline from '../components/features/VersionTimeline';
+import ProjectDocumentation from '../components/features/ProjectDocumentation';
 import './ProjectDetail.css';
 
 export default function ProjectDetail() {
@@ -16,6 +17,7 @@ export default function ProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('files');
   const [showUploader, setShowUploader] = useState(false);
+  const [isSavingDocs, setIsSavingDocs] = useState(false);
 
   const fetchProjectData = async () => {
     try {
@@ -78,6 +80,18 @@ export default function ProjectDetail() {
       fetchProjectData();
     } catch (error) {
       console.error('Restore failed:', error);
+    }
+  };
+
+  const handleSaveDocs = async (markdown) => {
+    setIsSavingDocs(true);
+    try {
+      await api.put(`/projects/${id}`, { readme: markdown });
+      fetchProjectData();
+    } catch (error) {
+      console.error('Save docs failed:', error);
+    } finally {
+      setIsSavingDocs(false);
     }
   };
 
@@ -148,6 +162,13 @@ export default function ProjectDetail() {
             Version History
             <span className="tab-count">{versions.length}</span>
           </button>
+          <button
+            className={`tab ${activeTab === 'documentation' ? 'active' : ''}`}
+            onClick={() => setActiveTab('documentation')}
+          >
+            <Book size={16} />
+            Documentation
+          </button>
         </div>
       </div>
 
@@ -164,6 +185,9 @@ export default function ProjectDetail() {
         )}
         {activeTab === 'versions' && (
           <VersionTimeline versions={versions} onRestore={handleRestore} />
+        )}
+        {activeTab === 'documentation' && (
+          <ProjectDocumentation project={project} onSave={handleSaveDocs} isSaving={isSavingDocs} />
         )}
       </div>
     </div>

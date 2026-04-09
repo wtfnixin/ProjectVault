@@ -1,0 +1,60 @@
+.project-documentation {
+  background-color: var(--card-bg, #ffffff);
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark .project-documentation {
+  --border-color: #3f3f46;
+  --card-bg: #18181b;
+}
+
+.documentation-view-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.markdown-preview-only {
+  padding: 0 24px 24px 24px;
+}
+
+.markdown-preview-only .wmde-markdown {
+  background-color: transparent !important;
+}
+
+.documentation-editor-wrapper {
+  flex-grow: 1;
+}
+
+/* Specific styling overrides for MDEditor to blend in */
+.w-md-editor {
+  border-radius: 8px 8px 0 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+}
+
+.documentation-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--card-bg);
+}
+
+.unsaved-warning {
+  color: #d97706;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dark .unsaved-warning {
+  color: #fbbf24;
+}

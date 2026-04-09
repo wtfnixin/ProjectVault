@@ -60,6 +60,7 @@ class ProjectBase(BaseModel):
     name: str
     description: Optional[str] = None
     color: Optional[str] = "#0c87eb"
+    readme: Optional[str] = None
 
 class ProjectCreate(ProjectBase):
     pass
@@ -68,6 +69,7 @@ class ProjectUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     color: Optional[str] = None
+    readme: Optional[str] = None
 
 class ProjectResponse(ProjectBase):
     id: int

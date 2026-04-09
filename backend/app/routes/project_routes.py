@@ -27,6 +27,7 @@ async def get_projects(
             "owner_id": project.owner_id,
             "created_at": project.created_at,
             "updated_at": project.updated_at,
+            "readme": project.readme,
             "file_count": len(project.files),
             "version_count": len(project.versions)
         }
@@ -56,6 +57,7 @@ async def get_project(
         "owner_id": project.owner_id,
         "created_at": project.created_at,
         "updated_at": project.updated_at,
+        "readme": project.readme,
         "file_count": len(project.files),
         "version_count": len(project.versions)
     }
@@ -94,6 +96,7 @@ async def create_project(
         "owner_id": project.owner_id,
         "created_at": project.created_at,
         "updated_at": project.updated_at,
+        "readme": project.readme,
         "file_count": 0,
         "version_count": 0
     }
@@ -119,6 +122,8 @@ async def update_project(
         project.description = project_data.description
     if project_data.color is not None:
         project.color = project_data.color
+    if project_data.readme is not None:
+        project.readme = project_data.readme
     
     db.commit()
     db.refresh(project)
@@ -131,6 +136,7 @@ async def update_project(
         "owner_id": project.owner_id,
         "created_at": project.created_at,
         "updated_at": project.updated_at,
+        "readme": project.readme,
         "file_count": len(project.files),
         "version_count": len(project.versions)
     }

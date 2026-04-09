@@ -17,6 +17,7 @@ Modern digital workflows in design, architecture, video, and academia rely on la
 
 ## ✨ Key Features
 - **Immutable Versioning:** Upload your project folder as discrete "Versions". If a client rejects the latest draft, download exactly what existed at "Draft 1" with a single click.
+- **Embedded Project Documentation:** A dedicated documentation tab equipped with a robust WYSIWYG Markdown editor. Features dual-pane split-screen editing, flawless dark mode synchronization, and allows both technical and non-technical users to manage rich README files persistently stored in the database.
 - **Binary-Optimized Architecture:** Separate metadata DB and direct disk I/O ensures flawless handling of massive PSDs, video files, and 3D models.
 - **Activity Auditing:** Complete, transparent activity heatmap logging who updated the project, when files were deleted, and which versions were published.
 - **Enterprise-Grade Security:**
