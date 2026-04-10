@@ -1,5 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File
 from fastapi.security import OAuth2PasswordRequestForm
+import os
+import shutil
+import uuid
 from sqlalchemy.orm import Session
 from .. import models, schemas, auth
 from ..database import get_db
@@ -90,6 +93,8 @@ async def update_profile(
         current_user.twitter_username = profile_data.twitter_username
     if profile_data.github_username is not None:
         current_user.github_username = profile_data.github_username
+    if profile_data.profile_picture_url is not None:
+        current_user.profile_picture_url = profile_data.profile_picture_url
     
     db.commit()
     db.refresh(current_user)
@@ -114,6 +119,42 @@ async def change_password(
     
     return {"message": "Password updated successfully"}
 
+@router.post("/profile/avatar", response_model=schemas.UserResponse)
+@limiter.limit("5/minute")
+async def upload_avatar(
+    request: Request,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File must be an image")
+    
+    file_extension = os.path.splitext(file.filename)[1]
+    if not file_extension:
+        file_extension = ".png" # fallback
+        
+    secure_filename = f"{uuid.uuid4().hex}{file_extension}"
+    file_path = os.path.join("uploads", "avatars", secure_filename)
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        
+    # Relative path from frontend API base
+    url_path = f"/api/uploads/avatars/{secure_filename}"
+    
+    # Actually wait, FASTAPI is mounting to /uploads. Let's use the absolute path backend root relative url.
+    # Frontend proxy usually passes through or handles backend requests.
+    # A safer approach is to respond with the path that can be requested from the backend.
+    # In ProjectVault, backend is http://localhost:8000, so we just return the path relative to host
+    url_path = f"/uploads/avatars/{secure_filename}"
+    
+    current_user.profile_picture_url = url_path
+    db.commit()
+    db.refresh(current_user)
+    
+    return current_user
+
 import firebase_admin
 from firebase_admin import auth as firebase_auth
 import uuid
@@ -126,6 +167,7 @@ async def google_login(request: Request, form_data: schemas.GoogleLoginRequest, 
         decoded_token = firebase_auth.verify_id_token(form_data.id_token, clock_skew_seconds=60)
         email = decoded_token.get("email")
         name = decoded_token.get("name", email.split("@")[0] if email else "User")
+        picture = decoded_token.get("picture")
         
         if not email:
             raise HTTPException(
@@ -145,11 +187,18 @@ async def google_login(request: Request, form_data: schemas.GoogleLoginRequest, 
             user = models.User(
                 name=name,
                 email=email,
-                hashed_password=hashed_password
+                hashed_password=hashed_password,
+                profile_picture_url=picture
             )
             db.add(user)
             db.commit()
             db.refresh(user)
+        else:
+            # If user exists but has no picture, and Google provides one, update it.
+            if picture and not user.profile_picture_url:
+                user.profile_picture_url = picture
+                db.commit()
+                db.refresh(user)
             
         # Create access token for the session
         access_token = auth.create_access_token(data={"sub": str(user.id)})

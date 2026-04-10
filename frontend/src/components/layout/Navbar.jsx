@@ -73,7 +73,11 @@ export default function Navbar() {
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <div className="user-avatar">
-                {user?.name?.charAt(0).toUpperCase() || 'U'}
+                {user?.profile_picture_url ? (
+                  <img src={user.profile_picture_url.startsWith('http') ? user.profile_picture_url : `http://localhost:8000${user.profile_picture_url}`} alt="Avatar" />
+                ) : (
+                  user?.name?.charAt(0).toUpperCase() || 'U'
+                )}
               </div>
               <span className="user-name">{user?.name || 'User'}</span>
               <ChevronDown size={16} className={showDropdown ? 'rotate' : ''} />
@@ -83,7 +87,11 @@ export default function Navbar() {
               <div className="user-dropdown">
                 <div className="dropdown-header">
                   <div className="user-avatar-lg">
-                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                    {user?.profile_picture_url ? (
+                      <img src={user.profile_picture_url.startsWith('http') ? user.profile_picture_url : `http://localhost:8000${user.profile_picture_url}`} alt="Avatar" />
+                    ) : (
+                      user?.name?.charAt(0).toUpperCase() || 'U'
+                    )}
                   </div>
                   <div className="dropdown-user-info">
                     <span className="dropdown-name">{user?.name}</span>

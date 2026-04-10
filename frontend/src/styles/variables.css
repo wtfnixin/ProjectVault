@@ -3,17 +3,19 @@
    ============================================== */
 
 :root {
-  /* Primary - Subtle Blue */
-  --primary-50: #f0f7ff;
-  --primary-100: #e0efff;
-  --primary-200: #b9ddff;
-  --primary-300: #7cc4ff;
-  --primary-400: #36a3ff;
-  --primary-500: #0c87eb;
-  --primary-600: #0069c9;
-  --primary-700: #0054a3;
-  --primary-800: #004786;
-  --primary-900: #003b6f;
+  /* Primary - Monochrome / White */
+  --primary-50: #fafafa;
+  --primary-100: #f4f4f5;
+  --primary-200: #e4e4e7;
+  --primary-300: #d4d4d8;
+  --primary-400: #a1a1aa;
+  --primary-500: #71717a;
+  --primary-600: #18181b; /* Main interactive elements (e.g. Buttons) */
+  --primary-700: #09090b;
+  --primary-800: #000000;
+  --primary-900: #000000;
+  
+  --primary-contrast: #ffffff;
 
   /* Neutral Colors - Clean Grays */
   --gray-50: #fafafa;
@@ -119,10 +121,12 @@
   --border-secondary: #27272a;
 
   /* Semantic primary color inversion for active states */
-  --primary-50: #003b6f;
-  --primary-100: #004786;
-  --primary-600: #36a3ff;
-  --primary-700: #7cc4ff;
+  --primary-50: #18181b;
+  --primary-100: #27272a;
+  --primary-600: #f4f4f5; /* Main interactive elements (e.g. Buttons) in dark mode */
+  --primary-700: #fafafa;
+  
+  --primary-contrast: #18181b;
 
   /* Inverted Gray Scale for components utilizing raw grayscale values */
   --gray-50: #18181b;

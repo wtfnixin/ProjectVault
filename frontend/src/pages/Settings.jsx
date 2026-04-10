@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { User, Mail, Lock, Save, Camera, Building, MapPin, Github, Twitter, BookOpen } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { User, Mail, Lock, Save, Camera, Building, MapPin, Github, Twitter, BookOpen, Upload } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
 import Button from '../components/common/Button';
@@ -8,11 +8,13 @@ import Card from '../components/common/Card';
 import './Settings.css';
 
 export default function Settings() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  const fileInputRef = useRef(null);
   
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
@@ -40,6 +42,38 @@ export default function Settings() {
     setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
     setError('');
     setSuccess('');
+  };
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file');
+      return;
+    }
+
+    setUploadingAvatar(true);
+    setError('');
+    setSuccess('');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      // Need to stringify URL since we're using multipart/form-data, axial does this easily
+      const response = await api.post('/auth/profile/avatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      // The response returns the updated user object
+      updateUser(response.data);
+      setSuccess('Profile picture updated successfully!');
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.detail || 'Failed to upload profile picture');
+    } finally {
+      setUploadingAvatar(false);
+    }
   };
 
   const handleProfileSubmit = async (e) => {
@@ -125,9 +159,26 @@ export default function Settings() {
                 <p className="section-desc">Update your personal information</p>
                 
                 <div className="avatar-section">
-                  <div className="avatar-large">
-                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                  <div 
+                    className={`avatar-large ${uploadingAvatar ? 'uploading' : ''}`}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    {user?.profile_picture_url ? (
+                      <img src={user.profile_picture_url.startsWith('http') ? user.profile_picture_url : `http://localhost:8000${user.profile_picture_url}`} alt="Avatar" />
+                    ) : (
+                      user?.name?.charAt(0).toUpperCase() || 'U'
+                    )}
+                    <div className="avatar-overlay">
+                      <Camera size={24} />
+                    </div>
                   </div>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleAvatarUpload} 
+                    accept="image/*" 
+                    style={{ display: 'none' }} 
+                  />
                   <div className="avatar-info">
                     <h3>{user?.name}</h3>
                     <p>{user?.email}</p>

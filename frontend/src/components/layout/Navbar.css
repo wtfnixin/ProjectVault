@@ -130,14 +130,23 @@
 .user-avatar {
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
   background: var(--primary-600);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: var(--font-size-sm);
-  color: white;
+  color: var(--primary-contrast);
+}
+
+.user-avatar img, .user-avatar-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .user-name {
@@ -179,13 +188,15 @@
 .user-avatar-lg {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
   background: var(--primary-600);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  color: white;
+  color: var(--primary-contrast);
 }
 
 .dropdown-user-info {

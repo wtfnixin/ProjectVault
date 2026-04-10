@@ -4,6 +4,8 @@ from .database import engine, Base
 from .config import settings
 from .routes import auth_routes, project_routes, file_routes, version_routes, activity_routes
 from .firebase_setup import init_firebase
+from fastapi.staticfiles import StaticFiles
+import os
 from slowapi.errors import RateLimitExceeded
 from slowapi import _rate_limit_exceeded_handler
 from .limiter import limiter
@@ -39,6 +41,12 @@ app.include_router(project_routes.router)
 app.include_router(file_routes.router)
 app.include_router(version_routes.router)
 app.include_router(activity_routes.router)
+
+# Ensure uploads directories exist
+os.makedirs("uploads/avatars", exist_ok=True)
+
+# Mount uploads directory for static files serving
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 @app.get("/")
 async def root():

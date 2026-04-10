@@ -112,6 +112,7 @@
 .avatar-large {
   width: 64px;
   height: 64px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
   color: white;
@@ -120,6 +121,40 @@
   justify-content: center;
   font-size: var(--font-size-xl);
   font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.avatar-large:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-large.uploading .avatar-overlay {
+  opacity: 0.7;
+  cursor: wait;
 }
 
 .avatar-info h3 {

@@ -17,6 +17,7 @@ class User(Base):
     github_username = Column(String(50), nullable=True)
     reset_token = Column(String(255), unique=True, index=True, nullable=True)
     reset_token_expires = Column(DateTime, nullable=True)
+    profile_picture_url = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     projects = relationship("Project", back_populates="owner", cascade="all, delete-orphan")

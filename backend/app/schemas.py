@@ -12,6 +12,7 @@ class UserBase(BaseModel):
     location: Optional[str] = None
     twitter_username: Optional[str] = None
     github_username: Optional[str] = None
+    profile_picture_url: Optional[str] = None
 
 class UserCreate(UserBase):
     password: str
@@ -50,6 +51,7 @@ class UserUpdate(BaseModel):
     location: Optional[str] = None
     twitter_username: Optional[str] = None
     github_username: Optional[str] = None
+    profile_picture_url: Optional[str] = None
 
 class PasswordChange(BaseModel):
     current_password: str

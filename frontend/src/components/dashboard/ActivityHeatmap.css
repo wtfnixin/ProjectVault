@@ -1,26 +1,77 @@
+.github-heatmap-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.github-heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.contributions-total {
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.contributions-settings {
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.caret {
+  font-size: 10px;
+}
+
+.github-heatmap-main {
+  display: flex;
+  gap: 24px;
+}
+
 .activity-heatmap-container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
-  background: var(--bg-primary);
-  width: 100%;
+  background: var(--bg-card); /* GitHub border container background */
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  padding: 16px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.heatmap-months {
+  display: grid;
+  grid-template-columns: repeat(53, 11px);
+  gap: 3px;
+  margin-left: 28px; /* Offset for the width of weekdays label column */
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
 }
 
 .heatmap-scroll-area {
   display: flex;
-  gap: var(--spacing-2);
+  gap: 8px;
   overflow-x: auto;
-  padding-bottom: var(--spacing-2);
 }
 
 .heatmap-weekdays {
   display: grid;
-  grid-template-rows: repeat(7, 13px);
+  grid-template-rows: repeat(7, 11px);
   gap: 3px;
-  font-size: 10px;
-  color: var(--text-secondary);
+  font-size: 12px;
+  color: var(--text-primary);
   align-items: center;
-  padding-right: var(--spacing-2);
+  flex-shrink: 0;
+  width: 20px;
 }
 
 .heatmap-weekdays span:nth-child(1) { grid-row: 2 / span 1; }
@@ -29,23 +80,23 @@
 
 .heatmap-grid {
   display: grid;
-  grid-template-rows: repeat(7, 13px);
+  grid-template-rows: repeat(7, 11px);
   grid-auto-flow: column;
-  grid-auto-columns: 13px;
+  grid-auto-columns: 11px;
   gap: 3px;
 }
 
 .heatmap-cell {
-  width: 13px;
-  height: 13px;
+  width: 11px;
+  height: 11px;
   border-radius: 2px;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  box-sizing: border-box;
+  transition: transform 0.1s ease;
   cursor: pointer;
 }
 
 .heatmap-cell:hover:not(.empty-pad) {
   transform: scale(1.2);
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
   z-index: 10;
 }
 
@@ -54,21 +105,29 @@
   pointer-events: none;
 }
 
-/* Color levels natively using theme var tokens */
-.heatmap-cell.level-0 { background-color: var(--bg-tertiary); }
+/* Monochrome Theme Colors using native var tokens */
+.heatmap-cell.level-0 { background-color: var(--bg-tertiary); border: 1px solid var(--border-secondary); }
 .heatmap-cell.level-1 { background-color: var(--primary-300); }
 .heatmap-cell.level-2 { background-color: var(--primary-500); }
 .heatmap-cell.level-3 { background-color: var(--primary-700); }
 .heatmap-cell.level-4 { background-color: var(--primary-900); }
 
-/* Legend & Footer */
 .heatmap-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
-  margin-top: var(--spacing-2);
+  margin-top: 16px;
+  padding-left: 28px;
+}
+
+.learn-more {
+  cursor: pointer;
+}
+
+.learn-more:hover {
+  color: var(--primary-600);
 }
 
 .heatmap-legend {
@@ -78,11 +137,50 @@
 }
 
 .heatmap-legend .heatmap-cell {
-  cursor: default;
   width: 11px;
   height: 11px;
 }
+
 .heatmap-legend .heatmap-cell:hover {
   transform: none;
-  box-shadow: none;
+}
+
+.github-heatmap-years {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.year-btn {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  text-align: left;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.year-btn:hover {
+  background: var(--bg-tertiary);
+}
+
+.year-btn.active {
+  background: var(--primary-600); /* Will use your active monochrome color or blue */
+  color: var(--primary-contrast);
+}
+
+@media (max-width: 768px) {
+  .github-heatmap-main {
+    flex-direction: column;
+  }
+  .github-heatmap-years {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+  }
 }

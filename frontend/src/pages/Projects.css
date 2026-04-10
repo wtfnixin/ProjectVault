@@ -92,7 +92,7 @@
 
 .toggle-btn.active {
   background: var(--primary-600);
-  color: white;
+  color: var(--primary-contrast);
 }
 
 .projects-grid {

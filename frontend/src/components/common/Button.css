@@ -37,7 +37,7 @@
 /* Variants - Minimal */
 .btn-primary {
   background: var(--primary-600);
-  color: white;
+  color: var(--primary-contrast);
 }
 
 .btn-primary:hover:not(:disabled) {

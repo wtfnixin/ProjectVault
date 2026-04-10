@@ -70,6 +70,7 @@ export function AuthProvider({ children }) {
     register,
     googleLogin,
     logout,
+    updateUser: setUser,
   };
 
   return (
