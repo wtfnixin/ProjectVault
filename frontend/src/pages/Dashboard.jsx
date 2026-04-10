@@ -17,6 +17,7 @@ import Card from '../components/common/Card';
 import ProjectCardSkeleton from '../components/common/skeletons/ProjectCardSkeleton';
 import ActivitySkeleton from '../components/common/skeletons/ActivitySkeleton';
 import ActivityHeatmap from '../components/dashboard/ActivityHeatmap';
+import { motion } from 'framer-motion';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -48,6 +49,19 @@ export default function Dashboard() {
     };
     fetchData();
   }, []);
+
+  const containerAnimations = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemAnimations = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+  };
 
   const formatStorage = (bytes) => {
     if (bytes < 1024) return bytes + ' B';
@@ -126,71 +140,49 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="dashboard-page">
-      <header className="dashboard-header">
+    <motion.div 
+      className="dashboard-page"
+      initial="hidden"
+      animate="show"
+      variants={containerAnimations}
+    >
+      <motion.header className="dashboard-header" variants={itemAnimations}>
         <h1>Welcome back, {user?.name?.split(' ')[0] || 'User'}</h1>
         <p>Here's what's happening with your projects</p>
-      </header>
+      </motion.header>
 
-      <div className="stats-grid">
-        <Card>
-          <div className="stat-card">
-            <div className="stat-icon">
-              <FolderKanban size={22} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">{stats.total_projects}</span>
-              <span className="stat-label">Total Projects</span>
-            </div>
-          </div>
-        </Card>
+      <motion.div className="stats-grid" variants={containerAnimations}>
+        {[
+          { title: 'Total Projects', value: stats.total_projects, icon: FolderKanban },
+          { title: 'Files Uploaded', value: stats.total_files, icon: FileText },
+          { title: 'Total Versions', value: stats.total_versions, icon: History },
+          { title: 'Storage Used', value: formatStorage(stats.storage_used), icon: HardDrive }
+        ].map((stat, i) => (
+          <motion.div key={i} variants={itemAnimations}>
+            <Card>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <stat.icon size={22} />
+                </div>
+                <div className="stat-content">
+                  <span className="stat-value">{stat.value}</span>
+                  <span className="stat-label">{stat.title}</span>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        ))}
+      </motion.div>
 
-        <Card>
-          <div className="stat-card">
-            <div className="stat-icon">
-              <FileText size={22} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">{stats.total_files}</span>
-              <span className="stat-label">Files Uploaded</span>
-            </div>
-          </div>
-        </Card>
-
-        <Card>
-          <div className="stat-card">
-            <div className="stat-icon">
-              <History size={22} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">{stats.total_versions}</span>
-              <span className="stat-label">Total Versions</span>
-            </div>
-          </div>
-        </Card>
-
-        <Card>
-          <div className="stat-card">
-            <div className="stat-icon">
-              <HardDrive size={22} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">{formatStorage(stats.storage_used)}</span>
-              <span className="stat-label">Storage Used</span>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className="dashboard-section" style={{ marginBottom: 'var(--spacing-6)' }}>
+      <motion.div className="dashboard-section" style={{ marginBottom: 'var(--spacing-6)' }} variants={itemAnimations}>
         <div className="section-header">
           <h2>Activity Heatmap</h2>
         </div>
         <ActivityHeatmap data={heatmapData} />
-      </div>
+      </motion.div>
 
-      <div className="dashboard-grid">
-        <div className="dashboard-section">
+      <motion.div className="dashboard-grid" variants={containerAnimations}>
+        <motion.div className="dashboard-section" variants={itemAnimations}>
           <div className="section-header">
             <h2><Clock size={18} /> Recent Activity</h2>
             <Link to="/activity" className="view-all-link">View all</Link>
@@ -238,9 +230,9 @@ export default function Dashboard() {
               </div>
             )}
           </Card>
-        </div>
+        </motion.div>
 
-        <div className="dashboard-section">
+        <motion.div className="dashboard-section" variants={itemAnimations}>
           <div className="section-header">
             <h2><FolderKanban size={18} /> Recent Projects</h2>
             <Link to="/projects" className="view-all-link">View all</Link>
@@ -278,8 +270,8 @@ export default function Dashboard() {
               ))
             )}
           </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }

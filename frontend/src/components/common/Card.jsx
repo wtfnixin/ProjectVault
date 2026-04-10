@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import './Card.css';
 
 export default function Card({ 
@@ -17,10 +18,17 @@ export default function Card({
     className
   ].filter(Boolean).join(' ');
 
+  const MotionWrapper = hover || onClick ? motion.div : 'div';
+  const animProps = hover || onClick ? {
+    whileHover: { scale: 1.02, y: -2 },
+    whileTap: { scale: 0.98 },
+    transition: { type: 'spring', stiffness: 400, damping: 17 }
+  } : {};
+
   return (
-    <div className={classNames} onClick={onClick}>
+    <MotionWrapper className={classNames} onClick={onClick} {...animProps}>
       {children}
-    </div>
+    </MotionWrapper>
   );
 }
 
