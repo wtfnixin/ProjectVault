@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     
     # Firebase
     FIREBASE_CREDENTIALS_PATH: str | None = None
+    FIREBASE_CREDENTIALS_JSON: str | None = None
+    
+    # CORS
+    FRONTEND_URL: str = ""
+
     
     class Config:
         env_file = ".env"
