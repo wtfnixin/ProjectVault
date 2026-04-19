@@ -284,6 +284,9 @@ async def delete_file(
     if not file:
         raise HTTPException(status_code=404, detail="File not found")
     
+    # Delete references from versions first to prevent foreign key constraint errors
+    db.query(models.VersionFile).filter(models.VersionFile.file_id == file_id).delete(synchronize_session=False)
+
     # Delete physical file
     if os.path.exists(file.path):
         os.remove(file.path)
