@@ -27,13 +27,23 @@ origins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:3
 if settings.FRONTEND_URL:
     origins.extend([url.strip() for url in settings.FRONTEND_URL.split(",")])
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Starlette crashes if '*' is in origins and allow_credentials is True
+if "*" in origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Add rate limiter
 app.state.limiter = limiter
