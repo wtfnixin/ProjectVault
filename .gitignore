@@ -51,3 +51,6 @@ word.txt
 
 
 docs/
+
+# Explicitly allow frontend lib directory
+!frontend/src/lib/
