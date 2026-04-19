@@ -23,7 +23,7 @@ app = FastAPI(
 )
 
 # CORS middleware
-origins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"]
+origins = ["https://project-vault-tau.vercel.app", "http://localhost:5173", "http://localhost:5174", "http://localhost:3000"]
 if settings.FRONTEND_URL:
     origins.extend([url.strip() for url in settings.FRONTEND_URL.split(",")])
 
