@@ -1,5 +1,7 @@
 # 📦 ProjectVault
 
+## Live Demo: https://project-vault-tau.vercel.app/
+
 > A developer-grade version control and asset management platform built for creatives, researchers, and non-developers.
 
 ProjectVault modernizes how professionals handle large, binary project files. Instead of trusting consumer cloud storage to auto-sync mistakes or relying on confusing developer tools like Git, ProjectVault provides an intuitive, explicitly milestone-driven snapshot workflow to ensure your project's history is perfectly preserved.
