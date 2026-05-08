@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Modal from '../common/Modal';
@@ -9,12 +9,18 @@ import './DashboardLayout.css';
 
 export default function DashboardLayout() {
   const [showNewProject, setShowNewProject] = useState(false);
+  const navigate = useNavigate();
 
   const handleCreateProject = async (projectData) => {
-    await api.post('/projects', projectData);
-    setShowNewProject(false);
-    // Trigger a page reload to refresh project list
-    window.location.reload();
+    try {
+      const response = await api.post('/projects', projectData);
+      const newProject = response.data;
+      setShowNewProject(false);
+      // Navigate to the newly created project
+      navigate(`/projects/${newProject.id}`);
+    } catch (error) {
+      console.error('Failed to create project:', error);
+    }
   };
 
   return (

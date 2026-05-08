@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { FolderKanban, Search, LayoutGrid, List, Plus, Folder } from 'lucide-react';
 import api from '../services/api';
 import Button from '../components/common/Button';
@@ -14,6 +14,7 @@ export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [viewMode, setViewMode] = useState('grid');
   const [showNewModal, setShowNewModal] = useState(false);
@@ -48,12 +49,13 @@ export default function Projects() {
       setSearchParams({});
     }
   };
-
   const handleCreateProject = async (projectData) => {
     try {
-      await api.post('/projects', projectData);
-      fetchProjects();
+      const response = await api.post('/projects', projectData);
+      const newProject = response.data;
       setShowNewModal(false);
+      // Navigate to the newly created project
+      navigate(`/projects/${newProject.id}`);
     } catch (error) {
       console.error('Failed to create project:', error);
       throw error; // Re-throw so modal can show error
